@@ -1,13 +1,17 @@
 #include "ch.h"
 #include "hal.h"
+#include "chprintf.h"
 #include "canmanager.h"
 #include "datatypes.h"
 #include "lightsmanager.h"
+#include "serialmanager.h"
 
+BaseSequentialStream *chp = (BaseSequentialStream *)&SD1;
 
 LightsManagerData lm_data;
 mutex_t lm_dataMutex;
 
+mutex_t serialMutex;
 event_listener_t can_el;
 
 // lights manager thread
@@ -39,6 +43,7 @@ static THD_FUNCTION(Thread2, arg) {
     while(!chThdShouldTerminateX()) {
       if (chEvtWaitAnyTimeout(ALL_EVENTS, MS2ST(100)) == 0)
         continue;
+      palToggleLine(LINE_ARD_A7);
       cm_run();
     }
     chEvtUnregister(&CAND1.rxfull_event, &can_el);
@@ -51,8 +56,10 @@ static THD_FUNCTION(Thread2, arg) {
 int main(void) {
   halInit();
   chSysInit();
+  chMtxObjectInit(&serialMutex);
   chMtxObjectInit(&lm_dataMutex);
 
+  //sm_init();
   cm_init();
   lm_init();
 
@@ -60,9 +67,6 @@ int main(void) {
   chThdCreateStatic(waThread2, sizeof(waThread2), NORMALPRIO, Thread2, NULL);
 
   while (true) {
-      palClearLine(LINE_ARD_A7);
-      chThdSleepMilliseconds(500);
-      palSetLine(LINE_ARD_A7);
-      chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(500);
   }
 }

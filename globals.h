@@ -18,4 +18,8 @@ extern mutex_t lm_dataMutex;
 //----- can -----
 extern event_listener_t can_el;
 
+//----- serial driver -----
+extern BaseSequentialStream *chp;
+extern mutex_t serialMutex;
+
 #endif /* GLOBALS_H_ */

@@ -8,7 +8,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "globals.h"
-//#include "serialmanager.h"
+#include "serialmanager.h"
 #include "inttypes.h"
 #include "buffer.h"
 #include "lightsmanager.h"
@@ -24,9 +24,6 @@
 // temperature
 #define CAN_PACKET_STATUS_3 11
 #define CAN_PACKET_STATUS_3_SIZE 2
-// lights
-#define CAN_LIGHTS_PACKET 15
-#define CAN_LIGHTS_PACKET_SIZE 3
 
 // front lights
 #define CAN_FRONT_LIGHTS_PACKET 16
@@ -53,7 +50,7 @@ void cm_init(void)
 void cm_run(void)
 {
   while (canReceive(&CAND1, CAN_ANY_MAILBOX, &rxMsg, TIME_IMMEDIATE) == MSG_OK) {
-    palToggleLine(LINE_LED_GREEN);
+    //palToggleLine(LINE_LED_GREEN);
     uint32_t eid = rxMsg.EID;
     uint8_t packetId = (eid & 0x0000FF00) >> 8;
     uint8_t deviceId = eid & 0x000000FF;
@@ -76,7 +73,7 @@ CANLightsPacket cm_unpackFrontLightsPacket(CANRxFrame frame)
 #if CAN_SERIAL_DEBUG
   sm_chprintf("%d, CANLightsPacket\n\r", ST2MS(chVTGetSystemTime()));
 #endif
-  if(frame.DLC != CAN_LIGHTS_PACKET_SIZE) {
+  if(frame.DLC != CAN_FRONT_LIGHTS_PACKET_SIZE) {
 #if CAN_SERIAL_DEBUG
     sm_chprintf("INCORRECT DATA LEN: %d\n\r", frame.DLC);
 #endif
