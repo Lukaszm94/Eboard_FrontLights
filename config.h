@@ -9,6 +9,6 @@
 #define CONFIG_H_
 
 #define LIGHTS_DEFAULT_BRIGHTNESS 40
-#define LIGHTS_DEFAULT_MODE 0
+#define LIGHTS_DEFAULT_MODE 2
 
 #endif /* CONFIG_H_ */

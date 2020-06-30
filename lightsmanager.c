@@ -99,7 +99,7 @@ void lm_setBrightness(uint8_t brightnessPercent)
     return;
   }
   float x = brightnessPercent;
-  float y = -0.3 * x + 100;
+  float y = -0.15 * x + 100;
   if(y < 0.0)
     y = 0.0;
   if(y > 100.0)
